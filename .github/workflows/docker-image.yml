@@ -31,8 +31,8 @@ jobs:
         # Path to the Dockerfile
         file: Dockerfile
         # List of tags
+          # ${{ secrets.DOCKERHUB_USERNAME }}/echo:$(date +%s)
         tags: | 
-          ${{ secrets.DOCKERHUB_USERNAME }}/echo:$(date +%s)
           ${{ secrets.DOCKERHUB_USERNAME }}/echo:latest
         push: true
     
