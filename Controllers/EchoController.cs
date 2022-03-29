@@ -31,6 +31,9 @@ namespace echo.Controllers
                 RequestData = new Dictionary<string, object> {
                    { "Headers",  Request.Headers},
                    { "Path", Request.Path},
+                   { "Host", Request.Host },
+                   { "EnvHost", Environment.MachineName},
+
                    //{ "Body", Request.Body},
                }
             });
