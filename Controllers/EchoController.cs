@@ -16,14 +16,15 @@ namespace echo.Controllers
         }
 
         [HttpGet]
-        //[HttpPost]
-        //[HttpPut]
-        //[HttpDelete]
-        //[HttpPut]
-        //[HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [HttpDelete]
+        [HttpPut]
+        [HttpPatch]
         public IActionResult Get()
         {
 
+            _logger.LogInformation("Request: '{req}', Path: '{path}', Host: {host}, MachineName: {machineName}", this.HttpContext.TraceIdentifier, Request.Path, Request.Host, Environment.MachineName);
 
             return new JsonResult(new EchoInfo()
             {
