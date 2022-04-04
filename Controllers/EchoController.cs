@@ -24,7 +24,9 @@ namespace echo.Controllers
         public IActionResult Get()
         {
 
-            _logger.LogInformation("Request: '{req}', Path: '{path}', Host: {host}, MachineName: {machineName}", this.HttpContext.TraceIdentifier, Request.Path, Request.Host, Environment.MachineName);
+            _logger.LogInformation("Request: '{req}', Path: '{path}', Host: {host}, MachineName: {machineName}, headers: {headers}",
+                this.HttpContext.TraceIdentifier, Request.Path, Request.Host, Environment.MachineName,
+                Request.Headers.Select(a => $"{a.Key}: {a.Value}").Aggregate((e, a) => e + ", " + a));
 
             return new JsonResult(new EchoInfo()
             {
