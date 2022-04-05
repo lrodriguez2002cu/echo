@@ -9,6 +9,8 @@ namespace echo.Controllers
     {
 
         const string RESPONSE_STATUS = "responseStatus";
+        const string RESPONSE_STATUS_HEADER = "responseStatusHeader";
+
         private readonly ILogger<EchoController> _logger;
 
         public EchoController(ILogger<EchoController> logger)
@@ -23,7 +25,15 @@ namespace echo.Controllers
             {
                 return value;
             }
-            else return 200;
+
+            var headers = Request.Headers;
+            if (headers.ContainsKey(RESPONSE_STATUS_HEADER))
+            {
+                var statusHeader = headers[RESPONSE_STATUS_HEADER];
+                if (headers.ContainsKey(statusHeader) && int.TryParse(headers[statusHeader], out var headerStatusResult)) return headerStatusResult;
+            }
+
+            return 200;
         }
 
         [HttpGet]
