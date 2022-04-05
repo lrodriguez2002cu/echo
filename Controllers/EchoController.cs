@@ -18,7 +18,7 @@ namespace echo.Controllers
 
         private int GetResponseStatusCode()
         {
-            var query = this.HttpContext.Request.Query;
+            var query = Request.Query;
             if (query.ContainsKey(RESPONSE_STATUS) && int.TryParse(query[RESPONSE_STATUS], out var value))
             {
                 return value;
@@ -36,13 +36,16 @@ namespace echo.Controllers
         {
             var resonseStatus = GetResponseStatusCode();
 
-            _logger.LogInformation("Request: '{req}',  ResponseStatus: {responseStatus} , Path: '{path}', " +
+            _logger.LogInformation(
+                "Request: '{req}',  " +
+                "ResponseStatus: {responseStatus}, " +
+                "Path: '{path}', " +
                 "Host: {host}, MachineName: {machineName}, " +
                 "headers: {headers}, " +
                 "Query: {query}",
                 this.HttpContext.TraceIdentifier, resonseStatus, Request.Path, Request.Host, Environment.MachineName,
-                Request.Headers.Select(a => $"'{a.Key}: {a.Value}'").Aggregate((e, a) => e + ", " + a),
-                Request.Query.Select(q => $"'{q.Key}: {q.Value}'").Aggregate((e, a) => e + ", " + a)
+                Request.Headers.Select(a => $"'{a.Key}: {a.Value}'").Aggregate("", (e, a) => e + ", " + a),
+                Request.Query.Select(q => $"'{q.Key}: {q.Value}'").Aggregate("", (e, a) => e + ", " + a)
                 );
 
             return new JsonResult(new EchoInfo()
