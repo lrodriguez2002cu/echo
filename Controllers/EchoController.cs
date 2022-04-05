@@ -8,11 +8,18 @@ namespace echo.Controllers
     public class EchoController : ControllerBase
     {
 
+        const string RESPONSE_STATUS = "responseStatus";
         private readonly ILogger<EchoController> _logger;
 
         public EchoController(ILogger<EchoController> logger)
         {
             _logger = logger;
+        }
+
+        private int GetResponseStatusCode()
+        {
+            var query = this.HttpContext.Request.Query;
+            return query.ContainsKey(RESPONSE_STATUS) && int.TryParse(query[RESPONSE_STATUS], out var value) ? value : 200;
         }
 
         [HttpGet]
@@ -39,7 +46,10 @@ namespace echo.Controllers
 
                    //{ "Body", Request.Body},
                }
-            });
+            })
+            {
+                StatusCode = GetResponseStatusCode()
+            };
         }
     }
 }
