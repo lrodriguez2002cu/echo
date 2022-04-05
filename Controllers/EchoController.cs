@@ -19,7 +19,11 @@ namespace echo.Controllers
         private int GetResponseStatusCode()
         {
             var query = this.HttpContext.Request.Query;
-            return query.ContainsKey(RESPONSE_STATUS) && int.TryParse(query[RESPONSE_STATUS], out var value) ? value : 200;
+            if (query.ContainsKey(RESPONSE_STATUS) && int.TryParse(query[RESPONSE_STATUS], out var value))
+            {
+                return value;
+            }
+            else return 200;
         }
 
         [HttpGet]
@@ -30,10 +34,11 @@ namespace echo.Controllers
         [HttpPatch]
         public IActionResult Get()
         {
+            var resonseStatus = GetResponseStatusCode();
 
-            _logger.LogInformation("Request: '{req}', Path: '{path}', Host: {host}, MachineName: {machineName}, headers: {headers}",
-                this.HttpContext.TraceIdentifier, Request.Path, Request.Host, Environment.MachineName,
-                Request.Headers.Select(a => $"{a.Key}: {a.Value}").Aggregate((e, a) => e + ", " + a));
+            _logger.LogInformation("Request: '{req}',  ResponseStatus: {responseStatus} , Path: '{path}', Host: {host}, MachineName: {machineName}, headers: {headers}",
+                this.HttpContext.TraceIdentifier, resonseStatus, Request.Path, Request.Host, Environment.MachineName,
+                Request.Headers.Select(a => $"'{a.Key}: {a.Value}'").Aggregate((e, a) => e + ", " + a));
 
             return new JsonResult(new EchoInfo()
             {
@@ -48,7 +53,7 @@ namespace echo.Controllers
                }
             })
             {
-                StatusCode = GetResponseStatusCode()
+                StatusCode = resonseStatus
             };
         }
     }
